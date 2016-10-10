@@ -1,4 +1,9 @@
 import setuptools
+import sys
+
+
+if sys.version_info.major < 3:
+	raise Exception('This software is only compatible with python 3!')
 
 setuptools.setup(
 	name = 'influx_nut',
