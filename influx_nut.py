@@ -21,7 +21,7 @@ DEFAULT_CONFIG = {
     # UPS name on that NUT server
     'nut_ups': 'ups1',
 
-    # variables from NUT to send to influxdb, see above
+    # variables from NUT to send to influxdb
     # example in json:
     # "nut_vars": {
     #   "ups.realpower.nominal": {
