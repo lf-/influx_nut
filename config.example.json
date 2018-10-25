@@ -1,0 +1,14 @@
+{
+  "nut_host": "nutcase",
+  "nut_ups": "cp1500avr",
+  "nut_vars": {
+    "ups.load": {"type": "int", "measurement_name": "ups_load"},
+    "input.voltage": {"type": "float", "measurement_name": "ups_voltage"}
+  },
+  "influx_host": "http://influxbox:8086",
+  "influx_creds": ["user", "lamepassword"],
+  "influx_db": "systems",
+  "influx_tags": {
+    "ups": "cp1500avr"
+  }
+}

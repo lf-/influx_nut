@@ -4,62 +4,89 @@ An interface between Network UPS Tools and influxdb.
 
 This allows sending metrics from NUT to an influxdb database.
 
+## Getting started
+
+```
+# cd /path/to/git/clone
+# pip3 install .
+# cp config.example.json /etc/influx_nut.json  # edit to set up for your needs
+$ influx_nut --config /etc/influx_nut.json
+```
+
 ## Example configuration
 
-### Config I'm using:
+### UPS load and voltage reporting
 
 ```json
 {
-	"nut_host": "nutcase",
-	"nut_ups": "cp1500avr",
-	"nut_vars": {
-		"ups.load": {"type": "int", "measurement_name": "ups_load"},
-		"input.voltage": {"type": "float", "measurement_name": "ups_voltage"}
-	},
-	"influx_host": "http://influxbox:8086",
-	"influx_creds": ["user", "lamepassword"],
-	"influx_db": "systems",
-	"influx_tags": {
-		"ups": "cp1500avr"
-	}
+  "nut_host": "nutcase",
+  "nut_ups": "cp1500avr",
+  "nut_vars": {
+    "ups.load": {"type": "int", "measurement_name": "ups_load"},
+    "input.voltage": {"type": "float", "measurement_name": "ups_voltage"}
+  },
+  "influx_host": "http://influxbox:8086",
+  "influx_creds": ["user", "lamepassword"],
+  "influx_db": "systems",
+  "influx_tags": {
+    "ups": "cp1500avr"
+  }
 }
 ```
 
-### Default configuration and documentation thereof (from influx_nut.py):
+### Config documentation
 
-```python
-DEFAULT_CONFIG = {
-    # interval between updates, in seconds
-    'interval': 20,
-    # ip/hostname of NUT server
-    'nut_host': '127.0.0.1',
-    # NUT port
-    'nut_port': 3493,
-    # UPS name on that NUT server
-    'nut_ups': 'ups1',
+#### `interval`
 
-    # variables from NUT to send to influxdb, see above
-    # example in json:
-    # "nut_vars": {
-    #   "ups.realpower.nominal": {
-    #        "type": "int",
-    #        "measurement_name": "ups1_power"
-    #   }
-    # }
-    'nut_vars': {},
+How frequently is the data sent to Influx in seconds? Default: `20`.
 
-    # proto://host:port of influxdb. Please don't add a trailing slash.
-    'influx_host': 'http://127.0.0.1:8086', 
+#### `nut_host`
 
-    # database on the influx server
-    'influx_db': 'systems',
+Hostname NUT is accessible at. Default: `"127.0.0.1"`.
 
-    # tags to add to influxdb measurements
-    'influx_tags': {},
+#### `nut_port`
 
-    # credentials for influxdb
-    # example in json:
-    # "influx_creds": ["user", "sekrit"]
-    'influx_creds': None
+Port number to use to connect to the NUT server. Default: `3493`.
+
+#### `nut_ups`
+
+UPS name on that NUT server. Default: `"ups1"`.
+
+#### `nut_vars`
+
+Variables to send from NUT to influxdb. Example:
+
+```json
+"nut_vars": {
+  "ups.realpower.nominal": {
+     "type": "int",
+     "measurement_name": "ups1_power"
+  }
 }
 ```
+
+Valid types are "float", "int", "bool", and "str".
+
+#### `influx_host`
+
+URL of influxdb server to send data to, without a trailing slash.
+Default: `"http://127.0.0.1:8086"`.
+
+#### `influx_db`
+
+Database on the influxdb server to put data in. Default: `"systems"`.
+
+#### `influx_tags`
+
+Tags (in mapping form) to send to the influxdb server. These are static for
+all measurements sent from influx_nut.
+Example:
+
+```json
+{"tag1": "value1", "tag2": "value2"}
+```
+
+#### `influx_creds`
+
+Credentials to use to connect to the influxdb server. Example: `["user", "sekrit"]`.
+Default is `null` (no authentication).
